@@ -6,6 +6,8 @@ c: .dword 2
 	meMori: .skip 64
 
 .text
+    adr x28, meMori // :C
+    add x1, x28, 0x10
     lsl X11, x4, #2
     add X11, X1, X11
 
@@ -13,7 +15,6 @@ setupRegValueHex:
     movz x0, 0x400, lsl #0      // todos en 0
     movk x0, 0x200, lsl #16     // luego estos
 
-    add x1, x0, 0x10
     add x2, x0, 0x20
     add x3, x0, 0x30
 
@@ -32,19 +33,12 @@ setupRegValueHex:
     mov x9, xzr
     mov x10, x0
 
-    movz x11, 0xffff, lsl #0
-    movk x11, 0x2021, lsl #16
-    movk x11, 0xf0dc, lsl #32
-    movk x11, 0xffff, lsl #48
-
     mov x12, xzr
     movz x13, 0xcaca, lsl #0
 
     /// ...
     lsl x11, x4, #2
     add x11, x1, x11
-
-    adr x28, meMori // :C
 
 setupMemory:
     mov x27, x28
@@ -372,7 +366,8 @@ setupMemoryLine4:
     add x27, x27, #1
 
 loop:
-    ldurh w9, [x11, #-2]        // LDURH X9, [X11, #-2]
+    ldurh w9, [x1, #0]
+    ldurh w10, [x11, #-2]        // LDURH X10, [X11, #-2]
     eor x9, x9, x10
     eor x10, x9, x10
     eor x9, x9, x10
