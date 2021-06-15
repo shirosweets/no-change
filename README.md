@@ -7,7 +7,6 @@ En el ejercicio 3 no fue correctamente colocadas los checkeos de las respuestas.
   - [Imagen del enunciado](#imagen-del-enunciado)
   - [Resultado en GDB](#resultado-en-gdb)
 - [¿Cómo debugearlo?](#¿cómo-debugearlo?)
-- [Mi gdb_history](#mi-gdb_history)
 - [Makefile](#makefile)
 - [Documentación](#documentación)
 - [Swap con XOR](#swap-con-xOR)
@@ -26,17 +25,12 @@ En el ejercicio 3 no fue correctamente colocadas los checkeos de las respuestas.
 
 ## Resultado en GDB
 
-Valor inicial: `b loop`
+Seteamos el `b loop`
 <p align="center">
-  <img src="assets/inicio.png" width="2500" title="inicio">
+  <img src="assets/GDB_0.png" width="2500" title="GDB_0">
 </p>
 
-`continue`
-<p align="center">
-  <img src="assets/GDB_0.jpg" width="2500" title="GDB_0">
-</p>
-
-`continue`
+Valor inicial: `continue`
 <p align="center">
   <img src="assets/GDB_1.png" width="2500" title="GDB_1">
 </p>
@@ -49,6 +43,11 @@ Valor inicial: `b loop`
 `continue`
 <p align="center">
   <img src="assets/GDB_3.png" width="2500" title="GDB_3">
+</p>
+
+`continue`
+<p align="center">
+  <img src="assets/GDB_4.png" width="2500" title="GDB_4">
 </p>
 
 **Fin...**
@@ -64,7 +63,7 @@ En una terminal:
 > `qemu-system-aarch64 -s -S -machine virt -cpu cortex-a53 -machine type=virt -nographic -smp 1 -m 64 -kernel kernel.img`
 
 En otra terminal, en el mismo path:
-> `gdb-multiarch -ex "set architecture aarch64" \-ex "target remote localhost:1234" \-ex "add-symbol-file main.o 0x0000000040080000" \-ex "dashboard registers -style list 'x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 x29 x30 sp pc cpsr'" \-ex  "stepi 6" \-ex "dashboard memory watch 0x00000000400803b0 64"`
+> `gdb-multiarch -ex "set architecture aarch64" \-ex "target remote localhost:1234" \-ex "add-symbol-file main.o 0x0000000040080000" \-ex "dashboard registers -style list 'x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 x29 x30 sp pc cpsr'" \-ex  "stepi 6" \-ex "dashboard memory watch 0x000000004008039c 64"`
 
 > `b loop`
 
@@ -76,7 +75,7 @@ Si no se tiene o está desalineado:</p>
 
 En la instrucción **[**`adr x28, meMori`**]** se guardó la dirección de origen del la memoria a observar, lo que hay que hacer es correr todos los pasos anteriores y llegar al punto donde se llega al primer loop (usar el breakpoint del **loop** ya hecho sirve para esto), y copiar la dirección de memoria **guardada en el registro x28**. Luego se reemplaza el siguiente valor en el comando de *gdb*:
 
-`\-ex "dashboard memory watch` **`0x00000000400803b0`** `64"`
+`\-ex "dashboard memory watch` **`0x000000004008039c`** `64"`
 
 por el valor copiado del registro.
 
@@ -91,82 +90,6 @@ En otra terminal, en el mismo path:
 > `b loop`
 
 > `continue`
-
-# Mi gdb_history
-```py
-set architecture aarch64
-add-symbol-file main.o 0x0000000040080000
-add-symbol-file main.o 0x0000000040080000
-add-symbol-file main.o 0x0000000040080000
-set architecture aarch64
-add-symbol-file main.o 0x0000000040080000
-run
-stepi
-stepi
-stepi
-stepi
-stepi
-stepi
-stepi
-stepi
-stepi
-stepi
-set architecture aarch64
-add-symbol-file main.o 0x0000000040080000
-dashboard memory watch​ 0x0000000040080000 128
-dashboard memory watch​ 0x0000000040080000 128
-dashboard memory watch 0x40080020 112
-​ dashboard memory clear
-dashboard memory clear
-dashboard memory watch 0x0000000040080000 128
-stepi
-stepi
-stepi 1
-clear
-set architecture aarch64
-add-symbol-file main.o 0x0000000040080000
-stepi 1
-stepi 1
-stepi 1
-stepi 1
-stepi 1
-stepi 1
-stepi 1
-stepi 1
-stepi 1
-stepi 1
-stepi 6
-stepi 1
-stepi 1
-stepi 1
-stepi 1
-b loop
-continue
-b loop
-continue
-b loop
-continue
-dashboard memory watch 0x00000000400800a4 64
-continue
-continue
-continue
-continue
-b loop
-continue
-continue
-continue
-continue
-continue
-b loop
-continue
-b loop
-continue
-b loop
-continue
-b loop
-continue
-continue
-```
 
 # Makefile
 Se podría modificar el makefile para que haga las diferentes partes que se necesita para debugearlo para ahorrar "pasos".
