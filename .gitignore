@@ -1,0 +1,13 @@
+# Carpeta con datos
+Dodld
+
+# Archivos de compilación de QEMU
+*.o
+memory_map.txt
+.gdb_history
+.vscode
+
+# Kernel
+kernel8.elf
+kernel8.img
+kernel8.list
